@@ -65,6 +65,7 @@ jobs:
       - name: Build Installer
         shell: pwsh
         run: |
+          Start-Sleep -Seconds 3
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "${{ github.workspace }}\installer-build\installer.iss"
           dir "${{ github.workspace }}\installer-build"
 
