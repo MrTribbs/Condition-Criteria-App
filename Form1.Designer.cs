@@ -117,7 +117,6 @@
             tabControl1.Size = new Size(1285, 855);
             tabControl1.SizeMode = TabSizeMode.Fixed;
             tabControl1.TabIndex = 28;
-            tabControl1.SelectedIndexChanged += this.tabControl1_SelectedIndexChanged;
             // 
             // tabPage1
             // 
