@@ -23,27 +23,33 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      # 3. Publish self-contained app
-      - name: Publish App
-        run: dotnet publish "Condition Criteria App.csproj" -c Release -r win-x64 --self-contained true -o publish/win-x64
-
-      # 4. Prepare installer folder
-      - name: Prepare Installer Files
-        run: |
-          if (-not (Test-Path installer-build)) { mkdir installer-build }
-          copy publish\win-x64\* installer-build
-          copy installer.iss installer-build
-
-      # 5. Extract version from installer.iss
+      # 3. Determine version from installer.iss
       - name: Get Version
         id: get_version
         shell: pwsh
         run: |
-          $iss = Get-Content installer.iss -Raw
-          $m = [regex]::Match($iss, '(?m)^\s*AppVersion\s*=\s*(.+)$')
-          $version = if ($m.Success) { $m.Groups[1].Value.Trim('"') } else { '1.0.0' }
+          $issPath = "${{ github.workspace }}\installer.iss"
+          $content = Get-Content $issPath -Raw
+          $match = [regex]::Match($content, '(?m)^\s*AppVersion\s*=\s*(.+)$')
+          $version = if ($match.Success) { $match.Groups[1].Value.Trim('"') } else { "1.0.0" }
           Write-Host "Version: $version"
           Add-Content -Path $Env:GITHUB_OUTPUT -Value "version=$version"
+
+      # 4. Publish App
+      - name: Publish App
+        shell: pwsh
+        run: |
+          $projectPath = "${{ github.workspace }}\Condition Criteria App.csproj"
+          dotnet publish "`"$projectPath`"" -c Release -r win-x64 --self-contained true -o publish\win-x64
+
+      # 5. Prepare installer folder
+      - name: Prepare Installer Files
+        shell: pwsh
+        run: |
+          $installerBuild = "${{ github.workspace }}\installer-build"
+          New-Item -ItemType Directory -Path $installerBuild -Force | Out-Null
+          Copy-Item -Path "${{ github.workspace }}\publish\win-x64\*" -Destination $installerBuild -Recurse -Force
+          Copy-Item -Path "${{ github.workspace }}\installer.iss" -Destination $installerBuild -Force
 
       # 6. Install Inno Setup
       - name: Install Inno Setup
@@ -51,15 +57,12 @@ jobs:
 
       # 7. Build Installer
       - name: Build Installer
+        shell: pwsh
         run: |
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer-build\installer.iss
-          dir installer-build
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "${{ github.workspace }}\installer-build\installer.iss"
+          dir "${{ github.workspace }}\installer-build"
 
-      # debug step
-      - name: Debug Installer Folder
-        run: dir installer-build
-
-      # 8. Upload installer as artifact
+      # 8. Upload Installer Artifact
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -75,7 +78,7 @@ jobs:
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
           release_name: v${{ steps.get_version.outputs.version }}
-          body: "Automated release for Condition Criteria App"
+          body: "Automated release for version ${{ steps.get_version.outputs.version }}"
 
       # 10. Upload Installer to Release
       - name: Upload Installer Asset
