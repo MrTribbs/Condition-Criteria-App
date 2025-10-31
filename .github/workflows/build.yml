@@ -41,6 +41,9 @@ jobs:
         run: |
           $projectPath = "${{ github.workspace }}\Condition Criteria App.csproj"
           dotnet publish "`"$projectPath`"" -c Release -r win-x64 --self-contained true -o publish\win-x64
+      
+      - name: Debug Published Files
+        run: dir publish\win-x64
 
       # 5. Prepare installer folder
       - name: Prepare Installer Files
@@ -54,6 +57,9 @@ jobs:
       # 6. Install Inno Setup
       - name: Install Inno Setup
         run: choco install innosetup -y --no-progress
+
+      - name: Debug Installer-Build Files
+        run: dir installer-build
 
       # 7. Build Installer
       - name: Build Installer
