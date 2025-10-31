@@ -25,7 +25,7 @@ jobs:
 
       # 3. Publish self-contained app
       - name: Publish App
-        run: dotnet publish "Condition Criteria App/Condition Criteria App.csproj" -c Release -r win-x64 --self-contained true -o publish/win-x64
+        run: dotnet publish "Condition Criteria App.csproj" -c Release -r win-x64 --self-contained true -o publish/win-x64
 
       # 4. Prepare installer folder
       - name: Prepare Installer Files
@@ -41,6 +41,7 @@ jobs:
       - name: Build Installer
         run: |
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+
       # 7. Upload installer as artifact (optional for debugging)
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
