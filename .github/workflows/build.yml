@@ -23,31 +23,27 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      # 3. Determine version from installer.iss
-      - name: Get Version
-        id: get_version
-        shell: pwsh
-        run: |
-          $issPath = Join-Path $Env:GITHUB_WORKSPACE 'installer.iss'
-          $version = '1.0.0'
-          if (Test-Path $issPath) {
-            $content = Get-Content $issPath -Raw
-            $match = [regex]::Match($content, '(?m)^\s*AppVersion\s*=\s*(.+)$')
-            if ($match.Success) { $version = $match.Groups[1].Value.Trim('"') }
-          }
-          Write-Host "Using version: $version"
-          Add-Content -Path $Env:GITHUB_OUTPUT -Value "version=$version"
-
-      # 4. Publish self-contained app
+      # 3. Publish self-contained app
       - name: Publish App
-        run: dotnet publish "Condition Criteria App.csproj" -c Release -r win-x64 --self-contained true -o publish/win-x64
+        run: dotnet publish Condition Criteria App.csproj -c Release -r win-x64 --self-contained true -o publish/win-x64
 
-      # 5. Prepare installer folder
+      # 4. Prepare installer folder
       - name: Prepare Installer Files
         run: |
           if (-not (Test-Path installer-build)) { mkdir installer-build }
           copy publish\win-x64\* installer-build
           copy installer.iss installer-build
+
+      # 5. Extract version from installer.iss
+      - name: Get Version
+        id: get_version
+        shell: pwsh
+        run: |
+          $iss = Get-Content installer.iss -Raw
+          $m = [regex]::Match($iss, '(?m)^\s*AppVersion\s*=\s*(.+)$')
+          $version = if ($m.Success) { $m.Groups[1].Value.Trim('"') } else { '1.0.0' }
+          Write-Host "Version: $version"
+          Add-Content -Path $Env:GITHUB_OUTPUT -Value "version=$version"
 
       # 6. Install Inno Setup
       - name: Install Inno Setup
@@ -75,7 +71,7 @@ jobs:
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
           release_name: v${{ steps.get_version.outputs.version }}
-          body: "Automated release for version ${{ steps.get_version.outputs.version }}"
+          body: "Automated release for Condition Criteria App"
 
       # 10. Upload Installer to Release
       - name: Upload Installer Asset
@@ -87,3 +83,4 @@ jobs:
           asset_path: installer-build\ConditionCriteriaInstaller.exe
           asset_name: ConditionCriteriaInstaller.exe
           asset_content_type: application/octet-stream
+``
