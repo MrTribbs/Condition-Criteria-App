@@ -83,4 +83,3 @@ jobs:
           asset_path: installer-build\ConditionCriteriaInstaller.exe
           asset_name: ConditionCriteriaInstaller.exe
           asset_content_type: application/octet-stream
-``
