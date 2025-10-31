@@ -54,6 +54,12 @@ jobs:
       # 6. Install Inno Setup
       - name: Install Inno Setup
         run: choco install innosetup -y --no-progress
+        
+      - name: Remove old installer EXE
+        shell: pwsh
+        run: |
+          $oldInstaller = "${{ github.workspace }}\installer-build\ConditionCriteriaInstaller.exe"
+          if (Test-Path $oldInstaller) { Remove-Item $oldInstaller -Force }
 
       # 7. Build Installer
       - name: Build Installer
