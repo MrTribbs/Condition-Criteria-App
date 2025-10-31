@@ -57,10 +57,10 @@ jobs:
 
       # 7. Build Installer
       - name: Build Installer
-        shell: pwsh
         run: |
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "${{ github.workspace }}\installer-build\installer.iss"
-          dir "${{ github.workspace }}\installer-build"
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer-build\installer.iss
+          echo "Contents of installer-build after ISCC:"
+          dir installer-build
 
       # 8. Upload Installer Artifact
       - name: Upload Installer Artifact
