@@ -23,45 +23,61 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      # 3. Publish self-contained app
+      # 3. Determine version from installer.iss
+      - name: Get Version
+        id: get_version
+        shell: pwsh
+        run: |
+          $issPath = Join-Path $Env:GITHUB_WORKSPACE 'installer.iss'
+          $version = '1.0.0'
+          if (Test-Path $issPath) {
+            $content = Get-Content $issPath -Raw
+            $match = [regex]::Match($content, '(?m)^\s*AppVersion\s*=\s*(.+)$')
+            if ($match.Success) { $version = $match.Groups[1].Value.Trim('"') }
+          }
+          Write-Host "Using version: $version"
+          Add-Content -Path $Env:GITHUB_OUTPUT -Value "version=$version"
+
+      # 4. Publish self-contained app
       - name: Publish App
         run: dotnet publish "Condition Criteria App.csproj" -c Release -r win-x64 --self-contained true -o publish/win-x64
 
-      # 4. Prepare installer folder
+      # 5. Prepare installer folder
       - name: Prepare Installer Files
         run: |
-          mkdir installer-build
+          if (-not (Test-Path installer-build)) { mkdir installer-build }
           copy publish\win-x64\* installer-build
           copy installer.iss installer-build
 
-      # 5. Install Inno Setup
+      # 6. Install Inno Setup
       - name: Install Inno Setup
         run: choco install innosetup -y --no-progress
 
-      # 6. Build Installer
+      # 7. Build Installer
       - name: Build Installer
         run: |
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer-build\installer.iss
           dir installer-build
 
-      # 7. Upload installer as artifact
+      # 8. Upload installer as artifact
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
           name: installer
           path: installer-build\ConditionCriteriaInstaller.exe
-      # 8. Create GitHub Release
+
+      # 9. Create GitHub Release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.0.0
-          release_name: v1.0.0
-          body: "Automated release for Condition Criteria App"
+          tag_name: v${{ steps.get_version.outputs.version }}
+          release_name: v${{ steps.get_version.outputs.version }}
+          body: "Automated release for version ${{ steps.get_version.outputs.version }}"
 
-      # 9. Upload Installer to Release
+      # 10. Upload Installer to Release
       - name: Upload Installer Asset
         uses: actions/upload-release-asset@v1
         env:
