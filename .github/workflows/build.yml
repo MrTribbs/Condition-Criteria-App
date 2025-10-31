@@ -33,7 +33,7 @@ jobs:
           $match = [regex]::Match($content, '(?m)^\s*AppVersion\s*=\s*(.+)$')
           $version = if ($match.Success) { $match.Groups[1].Value.Trim('"') } else { "1.0.0" }
           Write-Host "Version: $version"
-          Add-Content -Path $Env:GITHUB_OUTPUT -Value "version=$version"
+          Add-Content -Path $Env:$GITHUB_OUTPUT -Value "version=$version"
 
       # 4. Publish App
       - name: Publish App
