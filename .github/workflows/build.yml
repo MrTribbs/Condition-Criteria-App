@@ -25,13 +25,14 @@ jobs:
 
       # 3. Publish self-contained app
       - name: Publish App
-        run: dotnet publish "Condition Criteria App.csproj" -c Release -r win-x64 --self-contained true -o publish/win-x64
+        run: dotnet publish Condition Criteria App.csproj -c Release -r win-x64 --self-contained true -o publish/win-x64
 
       # 4. Prepare installer folder
       - name: Prepare Installer Files
         run: |
           mkdir installer-build
           copy publish\win-x64\* installer-build
+          copy installer.iss installer-build
 
       # 5. Install Inno Setup
       - name: Install Inno Setup
@@ -40,15 +41,15 @@ jobs:
       # 6. Build Installer
       - name: Build Installer
         run: |
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer-build\installer.iss
+          dir installer-build
 
-      # 7. Upload installer as artifact (optional for debugging)
+      # 7. Upload installer as artifact
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
           name: installer
-          path: ConditionCriteriaInstaller.exe
-
+          path: installer-build\ConditionCriteriaInstaller.exe
       # 8. Create GitHub Release
       - name: Create Release
         id: create_release
@@ -67,6 +68,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ConditionCriteriaInstaller.exe
+          asset_path: installer-build\ConditionCriteriaInstaller.exe
           asset_name: ConditionCriteriaInstaller.exe
           asset_content_type: application/octet-stream
