@@ -9,8 +9,7 @@ DisableDirPage=yes
 DisableProgramGroupPage=yes
 
 [Files]
-Source: "Condition Criteria App.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "installer-build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\Condition Criteria App"; Filename: "{app}\Condition Criteria App.exe"
