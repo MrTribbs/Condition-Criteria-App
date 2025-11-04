@@ -66,6 +66,7 @@
             textBox1 = new TextBox();
             label6 = new Label();
             panel1 = new Panel();
+            btnCheckUpdate = new Button();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
@@ -95,7 +96,7 @@
             label4.Name = "label4";
             label4.Size = new Size(72, 15);
             label4.TabIndex = 23;
-            label4.Text = "Version 2.1.3";
+            label4.Text = "Version 2.1.4";
             label4.TextAlign = ContentAlignment.MiddleRight;
             // 
             // label5
@@ -550,6 +551,7 @@
             // panel1
             // 
             panel1.AutoScroll = true;
+            panel1.Controls.Add(btnCheckUpdate);
             panel1.Controls.Add(tabControl1);
             panel1.Controls.Add(label3);
             panel1.Controls.Add(label4);
@@ -558,6 +560,16 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1309, 1081);
             panel1.TabIndex = 29;
+            // 
+            // btnCheckUpdate
+            // 
+            btnCheckUpdate.Location = new Point(1179, 22);
+            btnCheckUpdate.Name = "btnCheckUpdate";
+            btnCheckUpdate.Size = new Size(118, 27);
+            btnCheckUpdate.TabIndex = 29;
+            btnCheckUpdate.Text = "Check for Updates";
+            btnCheckUpdate.UseVisualStyleBackColor = true;
+            btnCheckUpdate.Click += btnCheckUpdate_Click;
             // 
             // Form1
             // 
@@ -619,5 +631,6 @@
         private Label label9;
         private TextBox tb_curRatings;
         private Panel panel1;
+        private Button btnCheckUpdate;
     }
 }

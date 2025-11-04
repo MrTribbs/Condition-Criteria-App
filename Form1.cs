@@ -1,6 +1,11 @@
 namespace Condition_Criteria_App
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Linq;
     using System.Net.Http;
+    using System.Text;
     using System.Text.Json;
     using System.Threading.Tasks;
     using System.Windows.Forms;
@@ -15,21 +20,39 @@ namespace Condition_Criteria_App
         private List<ANotesEntry> aNotesEntries;
         private List<SummaryEntry> summaryEntries;
 
-        // Helper to iterate the 8 criteria checkboxes
-        private IEnumerable<CheckBox> CriteriaBoxes =>
-            [checkBoxR1, checkBoxR2, checkBoxR3, checkBoxR4, checkBoxR5, checkBoxR6, checkBoxR7, checkBoxR8];
+        // Cached checkboxes array (reuse instead of recreating arrays)
+        private readonly CheckBox[] _criteriaBoxes;
+
+        // Lookup caches for O(1) access
+        private Dictionary<(string Area, string Name), AreaEntry> _areaLookup = new();
+        private Dictionary<string, List<string>> _areaToNames = new();
+        private Dictionary<string, CEntry> _criteriaByDc = new();
+        private Dictionary<string, CNotesEntry> _cNotesByDc = new();
+        private Dictionary<string, ANotesEntry> _aNotesByDc = new();
+
+        // Cached list of distinct areas for dropdown
+        private string[] _distinctAreas = Array.Empty<string>();
+
+        // Shared HttpClient to avoid socket exhaustion / allocations
+        private static readonly HttpClient s_httpClient = new HttpClient();
 
         public Form1()
         {
             InitializeComponent();
 
-            // Load data from your classes
-            aEntries = AreaData.Entries ?? [];
-            criteriaEntries = CriteriaData.Entries ?? [];
-            cNotesEntries = CNotesData.Entries ?? [];
-            aNotesEntries = ANotesData.Entries ?? [];
+            // Initialize the checkbox cache (designer fields must already exist)
+            _criteriaBoxes = new[] { checkBoxR1, checkBoxR2, checkBoxR3, checkBoxR4, checkBoxR5, checkBoxR6, checkBoxR7, checkBoxR8 };
 
-            summaryEntries = [];
+            // Load data from your classes (guard against null)
+            aEntries = AreaData.Entries ?? new List<AreaEntry>();
+            criteriaEntries = CriteriaData.Entries ?? new List<CEntry>();
+            cNotesEntries = CNotesData.Entries ?? new List<CNotesEntry>();
+            aNotesEntries = ANotesData.Entries ?? new List<ANotesEntry>();
+
+            summaryEntries = new List<SummaryEntry>();
+
+            // Build fast lookup caches
+            BuildCaches();
 
             // Wire up events
             comboBoxArea.SelectedIndexChanged += comboBoxArea_SelectedIndexChanged;
@@ -38,7 +61,7 @@ namespace Condition_Criteria_App
             buttonCopySummary.Click += buttonCopySummary_Click;
             buttonReset.Click += buttonReset_Click;
 
-            foreach (var cb in CriteriaBoxes)
+            foreach (var cb in _criteriaBoxes)
             {
                 cb.CheckedChanged += CriteriaCheckBox_CheckedChanged;
             }
@@ -54,48 +77,104 @@ namespace Condition_Criteria_App
             label2.Visible = false; // "Condition Notes" label
         }
 
+        private void BuildCaches()
+        {
+            // Area lookup by (Area, Name)
+            _areaLookup = aEntries
+                .Where(e => e.Area != null && e.Name != null)
+                .ToDictionary(e => (e.Area, e.Name), e => e);
+
+            // Area -> distinct names
+            _areaToNames = aEntries
+                .GroupBy(e => e.Area)
+                .ToDictionary(g => g.Key ?? "", g => g.Select(x => x.Name).Distinct().OrderBy(n => n).ToList());
+
+            // Distinct areas
+            _distinctAreas = _areaToNames.Keys.Where(k => !string.IsNullOrEmpty(k)).OrderBy(k => k).ToArray();
+
+            // DC lookups
+            _criteriaByDc = criteriaEntries
+                .Where(c => c.DC != null)
+                .ToDictionary(c => c.DC, c => c);
+
+            _cNotesByDc = cNotesEntries
+                .Where(c => c.DC != null)
+                .ToDictionary(c => c.DC, c => c);
+
+            _aNotesByDc = aNotesEntries
+                .Where(a => a.DC != null)
+                .ToDictionary(a => a.DC, a => a);
+        }
+
         private void Form1_Load(object? sender, EventArgs e)
         {
             PopulateAreaDropdown();
         }
 
-        public async Task CheckForUpdateAsync()
+        private async Task CheckForUpdateAsync()
         {
             string manifestUrl = "https://github.com/MrTribbs/Condition-Criteria-App/releases/latest/download/update.json";
-            using HttpClient client = new();
-            string json = await client.GetStringAsync(manifestUrl);
-            var updateInfo = JsonSerializer.Deserialize<UpdateManifest>(json);
-
-            if (updateInfo != null && updateInfo.Version != Application.ProductVersion)
+            try
             {
-                DialogResult result = MessageBox.Show(
-                    $"New version {updateInfo.Version} available.\nDo you want to download it?",
-                    "Update Available",
-                    MessageBoxButtons.YesNo);
+                string json = await s_httpClient.GetStringAsync(manifestUrl);
+                var updateInfo = JsonSerializer.Deserialize<UpdateManifest>(json);
 
-                if (result == DialogResult.Yes)
+                if (updateInfo != null && updateInfo.Version != Application.ProductVersion)
                 {
-                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    DialogResult result = MessageBox.Show(
+                        $"New version {updateInfo.Version} available.\nDo you want to download it?",
+                        "Update Available",
+                        MessageBoxButtons.YesNo);
+
+                    if (result == DialogResult.Yes)
                     {
-                        FileName = updateInfo.Url,
-                        UseShellExecute = true
-                    });
+                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = updateInfo.Url,
+                            UseShellExecute = true
+                        });
+                    }
                 }
+                else
+                {
+                    MessageBox.Show("You are running the latest version.", "No Update Available");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Show friendly error on network/parse failure
+                MessageBox.Show($"Failed to check for updates: {ex.Message}", "Update Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         public class UpdateManifest
         {
-            public required string Version { get; set; }
-            public required string Url { get; set; }
-            public string? Notes { get; set; }
+            public string Version { get; set; }
+            public string Url { get; set; }
+            public string Notes { get; set; }
+        }
+
+
+        private async void btnCheckUpdate_Click(object sender, EventArgs e)
+        {
+            await CheckForUpdateAsync();
         }
 
         private void PopulateAreaDropdown()
         {
-            comboBoxArea.Items.Clear();
-            var areas = aEntries.Select(e => e.Area).Distinct().ToList();
-            comboBoxArea.Items.AddRange([.. areas]);
+            comboBoxArea.BeginUpdate();
+            try
+            {
+                comboBoxArea.Items.Clear();
+                if (_distinctAreas.Length > 0)
+                {
+                    comboBoxArea.Items.AddRange(_distinctAreas);
+                }
+            }
+            finally
+            {
+                comboBoxArea.EndUpdate();
+            }
         }
 
         private string? SelectedArea => comboBoxArea.SelectedItem?.ToString();
@@ -106,17 +185,23 @@ namespace Condition_Criteria_App
             string? selectedArea = comboBoxArea.SelectedItem?.ToString();
 
             // Clear items and any selected/displayed value so the UI updates immediately
-            comboBoxName.Items.Clear();
-            comboBoxName.SelectedIndex = -1;
-            comboBoxName.SelectedItem = null;
-            comboBoxName.Text = "";
+            comboBoxName.BeginUpdate();
+            try
+            {
+                comboBoxName.Items.Clear();
+                comboBoxName.SelectedIndex = -1;
+                comboBoxName.SelectedItem = null;
+                comboBoxName.Text = "";
 
-            var names = aEntries
-                .Where(e => e.Area == selectedArea)
-                .Select(e => e.Name)
-                .Distinct()
-                .ToList();
-            comboBoxName.Items.AddRange(names.ToArray());
+                if (!string.IsNullOrEmpty(selectedArea) && _areaToNames.TryGetValue(selectedArea, out var names) && names.Count > 0)
+                {
+                    comboBoxName.Items.AddRange(names.ToArray());
+                }
+            }
+            finally
+            {
+                comboBoxName.EndUpdate();
+            }
 
             ClearCriteriaCheckboxes();
             lblRating.Text = "";
@@ -126,11 +211,12 @@ namespace Condition_Criteria_App
         {
             string? selectedArea = comboBoxArea.SelectedItem?.ToString();
             string? selectedName = comboBoxName.SelectedItem?.ToString();
-            var areaEntry = aEntries.FirstOrDefault(e => e.Area == selectedArea && e.Name == selectedName);
 
-            if (areaEntry != null)
+            if (!string.IsNullOrEmpty(selectedArea) && !string.IsNullOrEmpty(selectedName) &&
+                _areaLookup.TryGetValue((selectedArea, selectedName), out var areaEntry))
             {
-                var criteriaEntry = criteriaEntries.FirstOrDefault(c => c.DC == areaEntry.DC);
+                _criteriaByDc.TryGetValue(areaEntry.DC, out var criteriaEntry);
+
                 SetCriteriaCheckbox(checkBoxR1, criteriaEntry?.R1);
                 SetCriteriaCheckbox(checkBoxR2, criteriaEntry?.R2);
                 SetCriteriaCheckbox(checkBoxR3, criteriaEntry?.R3);
@@ -149,10 +235,10 @@ namespace Condition_Criteria_App
             tbANotes.Text = "";
             tbANotes.Visible = false;
             label2.Visible = false;
-            if (areaEntry != null)
+            if (!string.IsNullOrEmpty(selectedArea) && !string.IsNullOrEmpty(selectedName) &&
+                _areaLookup.TryGetValue((selectedArea, selectedName), out var foundAreaEntry))
             {
-                var aNoteEntry = aNotesEntries.FirstOrDefault(a => a.DC == areaEntry.DC);
-                if (!string.IsNullOrEmpty(aNoteEntry?.AreaNote))
+                if (_aNotesByDc.TryGetValue(foundAreaEntry.DC, out var aNoteEntry) && !string.IsNullOrEmpty(aNoteEntry?.AreaNote))
                 {
                     tbANotes.Text = aNoteEntry.AreaNote;
                     tbANotes.Visible = true;
@@ -193,14 +279,8 @@ namespace Condition_Criteria_App
 
         private void ClearCriteriaCheckboxes()
         {
-            SetCriteriaCheckbox(checkBoxR1, null);
-            SetCriteriaCheckbox(checkBoxR2, null);
-            SetCriteriaCheckbox(checkBoxR3, null);
-            SetCriteriaCheckbox(checkBoxR4, null);
-            SetCriteriaCheckbox(checkBoxR5, null);
-            SetCriteriaCheckbox(checkBoxR6, null);
-            SetCriteriaCheckbox(checkBoxR7, null);
-            SetCriteriaCheckbox(checkBoxR8, null);
+            foreach (var cb in _criteriaBoxes)
+                SetCriteriaCheckbox(cb, null);
         }
 
         private void CriteriaCheckBox_CheckedChanged(object? sender, EventArgs e)
@@ -210,60 +290,40 @@ namespace Condition_Criteria_App
             if (cb == null || !cb.Checked) return;
 
             // Uncheck all other checkboxes (only one can be selected)
-            foreach (var box in new[] { checkBoxR1, checkBoxR2, checkBoxR3, checkBoxR4, checkBoxR5, checkBoxR6, checkBoxR7, checkBoxR8 })
+            foreach (var box in _criteriaBoxes)
             {
                 if (box != cb) box.Checked = false;
             }
 
-            // Get the selected AreaEntry
+            // Get the selected AreaEntry via cache
             string? selectedArea = comboBoxArea.SelectedItem?.ToString();
             string? selectedName = comboBoxName.SelectedItem?.ToString();
-            var areaEntry = aEntries.FirstOrDefault(e => e.Area == selectedArea && e.Name == selectedName);
 
-            if (areaEntry == null)
+            if (string.IsNullOrEmpty(selectedArea) || string.IsNullOrEmpty(selectedName) ||
+                !_areaLookup.TryGetValue((selectedArea, selectedName), out var areaEntry))
             {
                 lblRating.Text = "";
                 return;
             }
 
-            // Determine which checkbox was checked and display the corresponding rating
-            string ratingText = "";
-            if (cb == checkBoxR1) ratingText = areaEntry.R1?.ToString() ?? "";
-            else if (cb == checkBoxR2) ratingText = areaEntry.R2?.ToString() ?? "";
-            else if (cb == checkBoxR3) ratingText = areaEntry.R3?.ToString() ?? "";
-            else if (cb == checkBoxR4) ratingText = areaEntry.R4?.ToString() ?? "";
-            else if (cb == checkBoxR5) ratingText = areaEntry.R5?.ToString() ?? "";
-            else if (cb == checkBoxR6) ratingText = areaEntry.R6?.ToString() ?? "";
-            else if (cb == checkBoxR7) ratingText = areaEntry.R7?.ToString() ?? "";
-            else if (cb == checkBoxR8) ratingText = areaEntry.R8?.ToString() ?? "";
-
+            // Determine rating using helper
+            string ratingText = GetRatingForBox(areaEntry, cb);
             lblRating.Text = $"Rating: {ratingText}";
 
-            // Show Criteria Note in tbCNotes
+            // Show Criteria Note in tbCNotes using cached CNotes
             tbCNotes.Text = "";
             tbCNotes.Visible = false;
             label1.Visible = false;
-            if (areaEntry != null)
-            {
-                string dc = areaEntry.DC;
-                string? rKey = null;
-                if (cb == checkBoxR1) rKey = "R1";
-                else if (cb == checkBoxR2) rKey = "R2";
-                else if (cb == checkBoxR3) rKey = "R3";
-                else if (cb == checkBoxR4) rKey = "R4";
-                else if (cb == checkBoxR5) rKey = "R5";
-                else if (cb == checkBoxR6) rKey = "R6";
-                else if (cb == checkBoxR7) rKey = "R7";
-                else if (cb == checkBoxR8) rKey = "R8";
 
-                var cNoteEntry = cNotesEntries.FirstOrDefault(c => c.DC == dc);
-                if (cNoteEntry != null && rKey != null)
+            if (_cNotesByDc.TryGetValue(areaEntry.DC, out var cNoteEntry))
+            {
+                var rKey = GetRKeyForBox(cb);
+                var noteValue = GetCNotesValue(cNoteEntry, rKey);
+                if (!string.IsNullOrEmpty(noteValue))
                 {
-                    var noteValue = typeof(CNotesEntry).GetProperty(rKey)?.GetValue(cNoteEntry) as string;
-                    if (!string.IsNullOrEmpty(noteValue))
-                    {
-                        tbCNotes.Text = noteValue;
-                    }
+                    tbCNotes.Text = noteValue;
+                    tbCNotes.Visible = true;
+                    label1.Visible = true;
                 }
             }
         }
@@ -272,35 +332,25 @@ namespace Condition_Criteria_App
         {
             string? selectedArea = comboBoxArea.SelectedItem?.ToString();
             string? selectedName = comboBoxName.SelectedItem?.ToString();
-            var areaEntry = aEntries.FirstOrDefault(e => e.Area == selectedArea && e.Name == selectedName);
 
-            // Find which checkbox is checked
-            CheckBox? checkedBox = null;
-            foreach (var box in new[] { checkBoxR1, checkBoxR2, checkBoxR3, checkBoxR4, checkBoxR5, checkBoxR6, checkBoxR7, checkBoxR8 })
-            {
-                if (box.Checked)
-                {
-                    checkedBox = box;
-                    break;
-                }
-            }
-
-            if (areaEntry == null || checkedBox == null)
+            if (string.IsNullOrEmpty(selectedArea) || string.IsNullOrEmpty(selectedName) ||
+                !_areaLookup.TryGetValue((selectedArea, selectedName), out var areaEntry))
             {
                 MessageBox.Show("Please select an area, condition, and a rating before adding to summary.");
                 return;
             }
 
-            // Determine which checkbox was checked and display the corresponding rating
-            string ratingText = "";
-            if (checkedBox == checkBoxR1) ratingText = areaEntry.R1?.ToString() ?? "";
-            else if (checkedBox == checkBoxR2) ratingText = areaEntry.R2?.ToString() ?? "";
-            else if (checkedBox == checkBoxR3) ratingText = areaEntry.R3?.ToString() ?? "";
-            else if (checkedBox == checkBoxR4) ratingText = areaEntry.R4?.ToString() ?? "";
-            else if (checkedBox == checkBoxR5) ratingText = areaEntry.R5?.ToString() ?? "";
-            else if (checkedBox == checkBoxR6) ratingText = areaEntry.R6?.ToString() ?? "";
-            else if (checkedBox == checkBoxR7) ratingText = areaEntry.R7?.ToString() ?? "";
-            else if (checkedBox == checkBoxR8) ratingText = areaEntry.R8?.ToString() ?? "";
+            // Find which checkbox is checked using cached array
+            CheckBox? checkedBox = _criteriaBoxes.FirstOrDefault(b => b.Checked);
+
+            if (checkedBox == null)
+            {
+                MessageBox.Show("Please select a rating before adding to summary.");
+                return;
+            }
+
+            // Use helper to get rating string
+            string ratingText = GetRatingForBox(areaEntry, checkedBox);
 
             summaryEntries.Add(new SummaryEntry
             {
@@ -317,7 +367,7 @@ namespace Condition_Criteria_App
             // Ensure summary controls are visible once we have entries
             EnsureSummaryVisible(summaryEntries.Count > 0);
 
-            // Calculate and display possible rating ($"Possible Rating = {possibleRating}")
+            // Calculate and display possible rating
             int possibleRating = CalculateCombinedRating(summaryEntries);
             lblPossibleRating.Text = ($"Projected Increase to {possibleRating}.");
         }
@@ -325,6 +375,7 @@ namespace Condition_Criteria_App
         private int CalculateCombinedRating(List<SummaryEntry> summaryEntries)
         {
             // Get ratings from summary entries (convert to int, ignore blanks)
+            // Using LINQ is fine here; number of entries small.
             var ratings = summaryEntries
                 .Select(e => int.TryParse(e.Rating, out int r) ? r : 0)
                 .Where(r => r > 0)
@@ -349,37 +400,53 @@ namespace Condition_Criteria_App
                 return;
             }
 
-            // Build summary text for copy.
-            if (string.IsNullOrWhiteSpace(tb_curRatings.Text))
+            // Build summary text using StringBuilder to reduce allocations
+            var sb = new StringBuilder();
+            if (!string.IsNullOrWhiteSpace(tb_curRatings.Text))
             {
-                var summaryText = lblPossibleRating.Text + Environment.NewLine +
-                              string.Join(Environment.NewLine, summaryEntries.Select(e =>
-                              $"{e.Area} > {e.Name} > DC: {e.DC} > Rating: {e.Rating}"));
-                Clipboard.SetText(summaryText);
+                sb.AppendLine("Client's Current Ratings:");
+                sb.AppendLine(tb_curRatings.Text);
+                sb.AppendLine();
+            }
+
+            sb.AppendLine(lblPossibleRating.Text);
+            foreach (var entry in summaryEntries)
+            {
+                sb.AppendLine($"{entry.Area} > {entry.Name} > DC: {entry.DC} > Rating: {entry.Rating}");
+            }
+
+            try
+            {
+                Clipboard.SetText(sb.ToString());
                 MessageBox.Show("Summary copied to clipboard!");
             }
-            else
+            catch (Exception ex)
             {
-                var summaryText = "Client's Current Ratings:" + Environment.NewLine +
-                              tb_curRatings.Text + Environment.NewLine + Environment.NewLine +
-                              lblPossibleRating.Text + Environment.NewLine +
-                              string.Join(Environment.NewLine, summaryEntries.Select(e =>
-                              $"{e.Area} > {e.Name} > DC: {e.DC} > Rating: {e.Rating}"));
-                Clipboard.SetText(summaryText);
-                MessageBox.Show("Summary copied to clipboard!");
+                MessageBox.Show($"Failed to copy summary: {ex.Message}", "Clipboard Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private void buttonReset_Click(object? sender, EventArgs e)
         {
             summaryEntries.Clear();
+
             comboBoxArea.SelectedIndex = -1;
             comboBoxArea.Text = "";
             comboBoxName.SelectedIndex = -1;
             comboBoxName.Text = "";
             comboBoxName.Items.Clear();
+
             ClearCriteriaCheckboxes();
-            listSummary.Items.Clear();
+            listSummary.BeginUpdate();
+            try
+            {
+                listSummary.Items.Clear();
+            }
+            finally
+            {
+                listSummary.EndUpdate();
+            }
+
             tb_curRatings.Text = "";
 
             // Hide checkboxes and summary controls again
@@ -401,7 +468,7 @@ namespace Condition_Criteria_App
 
         private void SetCriteriaBoxesVisible(bool visible)
         {
-            foreach (var box in CriteriaBoxes)
+            foreach (var box in _criteriaBoxes)
                 box.Visible = visible;
         }
 
@@ -424,6 +491,23 @@ namespace Condition_Criteria_App
             if (cb.Name.EndsWith("R7")) return "R7";
             if (cb.Name.EndsWith("R8")) return "R8";
             return null!;
+        }
+
+        private static string? GetCNotesValue(CNotesEntry? entry, string? rKey)
+        {
+            if (entry == null || rKey == null) return null;
+            return rKey switch
+            {
+                "R1" => entry.R1,
+                "R2" => entry.R2,
+                "R3" => entry.R3,
+                "R4" => entry.R4,
+                "R5" => entry.R5,
+                "R6" => entry.R6,
+                "R7" => entry.R7,
+                "R8" => entry.R8,
+                _ => null
+            };
         }
 
         private string GetRatingForBox(AreaEntry areaEntry, CheckBox box)
