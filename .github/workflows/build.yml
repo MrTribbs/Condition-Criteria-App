@@ -72,9 +72,9 @@ jobs:
       - name: Create update manifest
         shell: pwsh
         run: |
-          $version = '${{ steps.get_version.outputs.version }}'
+          $version = '${{ steps.get_version.outputs.version }}'.Trim()
           $installerName = 'ConditionCriteriaInstaller.exe'
-          $url = "https://github.com/${{ github.repository }}/releases/download/v$version/$installerName"
+          $url = "https://github.com/${{ github.repository }}/releases/latest/download/$installerName"
           $notes = "Release $version"
           $obj = @{ version = $version; url = $url; notes = $notes }
           $json = $obj | ConvertTo-Json -Compress
