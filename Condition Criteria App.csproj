@@ -8,13 +8,17 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>installer-build\app.ico</ApplicationIcon>
-    <AssemblyVersion>2.1.5.0</AssemblyVersion>
-	<FileVersion>2.1.5.0</FileVersion>
-	<Version>2.1.5</Version>
+    <AssemblyVersion>2.1.6.0</AssemblyVersion>
+	<FileVersion>2.1.6.0</FileVersion>
+	<Version>2.1.6</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="installer-build\app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
   <ItemGroup>

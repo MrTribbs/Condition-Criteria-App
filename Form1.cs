@@ -6,7 +6,7 @@ namespace Condition_Criteria_App
     using System.Linq;
     using System.Net.Http;
     using System.Text;
-    using System.Text.Json;
+    using Newtonsoft.Json;
     using System.Threading.Tasks;
     using System.Windows.Forms;
 
@@ -126,11 +126,27 @@ namespace Condition_Criteria_App
         private async Task CheckForUpdateAsync()
         {
             string manifestUrl = "https://github.com/MrTribbs/Condition-Criteria-App/releases/latest/download/update.json";
-            using HttpClient client = new HttpClient();
-            string json = await client.GetStringAsync(manifestUrl);
-            var updateInfo = JsonSerializer.Deserialize<UpdateManifest>(json);
 
-            if (updateInfo != null && updateInfo.Version.Trim() != Application.ProductVersion)
+            using HttpClient client = new();
+            string json = await client.GetStringAsync(manifestUrl);
+            // MessageBox.Show($"Raw JSON: {json}");
+
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                MessageBox.Show("Update manifest is empty or could not be downloaded.", "Update Error");
+                return;
+            }
+
+            var updateInfo = JsonConvert.DeserializeObject<UpdateManifest>(json);
+            // MessageBox.Show($"Parsed URL: {updateInfo?.Url}");
+
+            if (updateInfo == null)
+            {
+                MessageBox.Show("Update information is invalid.", "Update Error");
+                return;
+            }
+
+            if (updateInfo.Version.Trim() != Application.ProductVersion)
             {
                 DialogResult result = MessageBox.Show(
                     $"New version {updateInfo.Version} available.\nDo you want to download it?",
@@ -155,8 +171,8 @@ namespace Condition_Criteria_App
         public class UpdateManifest
         {
             public string Version { get; set; }
-            public string Url { get; set; }
             public string Notes { get; set; }
+            public string Url { get; set; }
         }
 
         private void PopulateAreaDropdown()
