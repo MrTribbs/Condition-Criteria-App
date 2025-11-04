@@ -95,7 +95,7 @@
             label4.Name = "label4";
             label4.Size = new Size(72, 15);
             label4.TabIndex = 23;
-            label4.Text = "Version 2.1.1";
+            label4.Text = "Version 2.1.3";
             label4.TextAlign = ContentAlignment.MiddleRight;
             // 
             // label5
