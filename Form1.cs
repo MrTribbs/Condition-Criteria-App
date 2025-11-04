@@ -146,7 +146,9 @@ namespace Condition_Criteria_App
                 return;
             }
 
-            if (updateInfo.Version.Trim() != Application.ProductVersion)
+            var currentVersion = Application.ProductVersion.Split('+')[0].Trim();
+
+            if (updateInfo.Version.Trim() != currentVersion)
             {
                 DialogResult result = MessageBox.Show(
                     $"New version {updateInfo.Version} available.\nDo you want to download it?",
