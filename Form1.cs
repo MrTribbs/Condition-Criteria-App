@@ -1,7 +1,42 @@
 namespace Condition_Criteria_App
 {
+    using System.Net.Http;
+    using System.Text.Json;
+
     public partial class Form1 : Form
     {
+        public async Task CheckForUpdateAsync()
+        {
+            string manifestUrl = "https://github.com/MrTribbs/Condition-Criteria-App/releases/latest/download/update.json";
+            using HttpClient client = new HttpClient();
+            string json = await client.GetStringAsync(manifestUrl);
+            var updateInfo = JsonSerializer.Deserialize<UpdateManifest>(json);
+
+            if (updateInfo != null && updateInfo.Version != Application.ProductVersion)
+            {
+                DialogResult result = MessageBox.Show(
+                    $"New version {updateInfo.Version} available.\nDo you want to download it?",
+                    "Update Available",
+                    MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = updateInfo.Url,
+                        UseShellExecute = true
+                    });
+                }
+            }
+        }
+
+        public class UpdateManifest
+        {
+            public string Version { get; set; }
+            public string Url { get; set; }
+            public string Notes { get; set; }
+        }
+
         // Data lists
         private List<AreaEntry> aEntries;
         private List<CEntry> criteriaEntries;
@@ -279,9 +314,9 @@ namespace Condition_Criteria_App
             // Ensure summary controls are visible once we have entries
             EnsureSummaryVisible(summaryEntries.Count > 0);
 
-            // Calculate and display possible rating
+            // Calculate and display possible rating ($"Possible Rating = {possibleRating}")
             int possibleRating = CalculateCombinedRating(summaryEntries);
-            lblPossibleRating.Text = $"Possible Rating = {possibleRating}";
+            lblPossibleRating.Text = ($"Projected Increase to {possibleRating}.");
         }
 
         private int CalculateCombinedRating(List<SummaryEntry> summaryEntries)
@@ -311,13 +346,25 @@ namespace Condition_Criteria_App
                 return;
             }
 
-            var summaryText = lblPossibleRating.Text + ":" + Environment.NewLine +
-                string.Join(Environment.NewLine, summaryEntries.Select(e =>
-                $"{e.Area} > {e.Name} > DC: {e.DC} > Rating: {e.Rating}"
-            ));
-
-            Clipboard.SetText(summaryText);
-            MessageBox.Show("Summary copied to clipboard!");
+            // Build summary text for copy.
+            if (string.IsNullOrWhiteSpace(tb_curRatings.Text))
+            {
+                var summaryText = lblPossibleRating.Text + Environment.NewLine +
+                              string.Join(Environment.NewLine, summaryEntries.Select(e =>
+                              $"{e.Area} > {e.Name} > DC: {e.DC} > Rating: {e.Rating}"));
+                Clipboard.SetText(summaryText);
+                MessageBox.Show("Summary copied to clipboard!");
+            }
+            else
+            {
+                var summaryText = "Client's Current Ratings:" + Environment.NewLine +
+                              tb_curRatings.Text + Environment.NewLine + Environment.NewLine +
+                              lblPossibleRating.Text + Environment.NewLine +
+                              string.Join(Environment.NewLine, summaryEntries.Select(e =>
+                              $"{e.Area} > {e.Name} > DC: {e.DC} > Rating: {e.Rating}"));
+                Clipboard.SetText(summaryText);
+                MessageBox.Show("Summary copied to clipboard!");
+            }
         }
 
         private void buttonReset_Click(object? sender, EventArgs e)
@@ -330,6 +377,7 @@ namespace Condition_Criteria_App
             comboBoxName.Items.Clear();
             ClearCriteriaCheckboxes();
             listSummary.Items.Clear();
+            tb_curRatings.Text = "";
 
             // Hide checkboxes and summary controls again
             SetCriteriaBoxesVisible(false);
@@ -386,11 +434,6 @@ namespace Condition_Criteria_App
             if (box == checkBoxR7) return areaEntry.R7?.ToString() ?? "";
             if (box == checkBoxR8) return areaEntry.R8?.ToString() ?? "";
             return "";
-        }
-
-        private void tabPage2_Click(object sender, EventArgs e)
-        {
-
         }
     }
 

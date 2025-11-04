@@ -34,6 +34,9 @@
             label5 = new Label();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            tb_curRatings = new TextBox();
+            label9 = new Label();
+            label8 = new Label();
             flowLayoutPanel1 = new FlowLayoutPanel();
             checkBoxR1 = new CheckBox();
             checkBoxR2 = new CheckBox();
@@ -62,10 +65,12 @@
             label7 = new Label();
             textBox1 = new TextBox();
             label6 = new Label();
+            panel1 = new Panel();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             tabPage2.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // label3
@@ -74,9 +79,9 @@
             label3.Font = new Font("Segoe UI Black", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label3.ForeColor = Color.White;
             label3.ImageAlign = ContentAlignment.MiddleLeft;
-            label3.Location = new Point(14, 12);
+            label3.Location = new Point(7, 4);
             label3.Name = "label3";
-            label3.Size = new Size(381, 49);
+            label3.Size = new Size(333, 37);
             label3.TabIndex = 22;
             label3.Text = "GTMH Qualifying App";
             label3.TextAlign = ContentAlignment.MiddleLeft;
@@ -86,11 +91,11 @@
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label4.ForeColor = Color.FromArgb(251, 176, 59);
-            label4.Location = new Point(1397, 36);
+            label4.Location = new Point(1220, 4);
             label4.Name = "label4";
-            label4.Size = new Size(91, 20);
+            label4.Size = new Size(72, 15);
             label4.TabIndex = 23;
-            label4.Text = "Version 2.1.0";
+            label4.Text = "Version 2.1.1";
             label4.TextAlign = ContentAlignment.MiddleRight;
             // 
             // label5
@@ -98,31 +103,31 @@
             label5.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             label5.Font = new Font("Segoe UI", 8.25F, FontStyle.Italic, GraphicsUnit.Point, 0);
             label5.ForeColor = Color.FromArgb(224, 224, 224);
-            label5.Location = new Point(970, 1213);
+            label5.Location = new Point(850, 1062);
             label5.Name = "label5";
-            label5.Size = new Size(511, 17);
+            label5.Size = new Size(447, 13);
             label5.TabIndex = 24;
             label5.Text = "©2025 ALL RIGHTS RESERVED. ALL CONTENT PROPERTY OF GLOBAL TEKMED HOLDINGS.";
             label5.TextAlign = ContentAlignment.MiddleRight;
             // 
             // tabControl1
             // 
-            tabControl1.Appearance = TabAppearance.Buttons;
             tabControl1.Controls.Add(tabPage1);
             tabControl1.Controls.Add(tabPage2);
-            tabControl1.Location = new Point(14, 65);
-            tabControl1.Margin = new Padding(3, 4, 3, 4);
+            tabControl1.Location = new Point(12, 44);
             tabControl1.Name = "tabControl1";
             tabControl1.Padding = new Point(5, 5);
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(1469, 1140);
-            tabControl1.SizeMode = TabSizeMode.Fixed;
+            tabControl1.Size = new Size(1285, 1007);
             tabControl1.TabIndex = 28;
             // 
             // tabPage1
             // 
             tabPage1.BackColor = Color.FromArgb(0, 150, 175);
             tabPage1.BorderStyle = BorderStyle.Fixed3D;
+            tabPage1.Controls.Add(tb_curRatings);
+            tabPage1.Controls.Add(label9);
+            tabPage1.Controls.Add(label8);
             tabPage1.Controls.Add(flowLayoutPanel1);
             tabPage1.Controls.Add(label2);
             tabPage1.Controls.Add(label1);
@@ -139,13 +144,47 @@
             tabPage1.Controls.Add(comboBoxName);
             tabPage1.Controls.Add(comboBoxArea);
             tabPage1.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            tabPage1.Location = new Point(4, 36);
-            tabPage1.Margin = new Padding(3, 4, 3, 4);
+            tabPage1.Location = new Point(4, 28);
             tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new Padding(3, 4, 3, 4);
-            tabPage1.Size = new Size(1461, 1100);
+            tabPage1.Padding = new Padding(3);
+            tabPage1.Size = new Size(1277, 975);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Main Page";
+            // 
+            // tb_curRatings
+            // 
+            tb_curRatings.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tb_curRatings.Location = new Point(6, 686);
+            tb_curRatings.Multiline = true;
+            tb_curRatings.Name = "tb_curRatings";
+            tb_curRatings.PlaceholderText = "Enter client's current rated disabilities and current percentages.";
+            tb_curRatings.ScrollBars = ScrollBars.Vertical;
+            tb_curRatings.Size = new Size(1260, 119);
+            tb_curRatings.TabIndex = 46;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label9.ForeColor = Color.White;
+            label9.Location = new Point(6, 816);
+            label9.Name = "label9";
+            label9.Size = new Size(249, 21);
+            label9.TabIndex = 45;
+            label9.Text = "Summary of Possible Increases:";
+            label9.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label8.ForeColor = Color.White;
+            label8.Location = new Point(7, 662);
+            label8.Name = "label8";
+            label8.Size = new Size(192, 21);
+            label8.TabIndex = 44;
+            label8.Text = "Client's Current Ratings:";
+            label8.TextAlign = ContentAlignment.MiddleRight;
             // 
             // flowLayoutPanel1
             // 
@@ -157,10 +196,9 @@
             flowLayoutPanel1.Controls.Add(checkBoxR6);
             flowLayoutPanel1.Controls.Add(checkBoxR7);
             flowLayoutPanel1.Controls.Add(checkBoxR8);
-            flowLayoutPanel1.Location = new Point(7, 128);
-            flowLayoutPanel1.Margin = new Padding(3, 4, 3, 4);
+            flowLayoutPanel1.Location = new Point(6, 96);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(1440, 552);
+            flowLayoutPanel1.Size = new Size(1260, 414);
             flowLayoutPanel1.TabIndex = 42;
             // 
             // checkBoxR1
@@ -173,10 +211,9 @@
             checkBoxR1.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR1.FlatStyle = FlatStyle.Flat;
             checkBoxR1.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR1.Location = new Point(3, 4);
-            checkBoxR1.Margin = new Padding(3, 4, 3, 4);
+            checkBoxR1.Location = new Point(3, 3);
             checkBoxR1.Name = "checkBoxR1";
-            checkBoxR1.Size = new Size(1433, 61);
+            checkBoxR1.Size = new Size(1254, 46);
             checkBoxR1.TabIndex = 2;
             checkBoxR1.Text = "checkBox1";
             checkBoxR1.UseVisualStyleBackColor = false;
@@ -191,10 +228,9 @@
             checkBoxR2.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR2.FlatStyle = FlatStyle.Flat;
             checkBoxR2.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR2.Location = new Point(3, 73);
-            checkBoxR2.Margin = new Padding(3, 4, 3, 4);
+            checkBoxR2.Location = new Point(3, 55);
             checkBoxR2.Name = "checkBoxR2";
-            checkBoxR2.Size = new Size(1433, 61);
+            checkBoxR2.Size = new Size(1254, 46);
             checkBoxR2.TabIndex = 3;
             checkBoxR2.Text = "checkBox2";
             checkBoxR2.UseVisualStyleBackColor = false;
@@ -209,10 +245,9 @@
             checkBoxR3.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR3.FlatStyle = FlatStyle.Flat;
             checkBoxR3.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR3.Location = new Point(3, 142);
-            checkBoxR3.Margin = new Padding(3, 4, 3, 4);
+            checkBoxR3.Location = new Point(3, 107);
             checkBoxR3.Name = "checkBoxR3";
-            checkBoxR3.Size = new Size(1433, 61);
+            checkBoxR3.Size = new Size(1254, 46);
             checkBoxR3.TabIndex = 4;
             checkBoxR3.Text = "checkBox3";
             checkBoxR3.UseVisualStyleBackColor = false;
@@ -227,10 +262,9 @@
             checkBoxR4.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR4.FlatStyle = FlatStyle.Flat;
             checkBoxR4.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR4.Location = new Point(3, 211);
-            checkBoxR4.Margin = new Padding(3, 4, 3, 4);
+            checkBoxR4.Location = new Point(3, 159);
             checkBoxR4.Name = "checkBoxR4";
-            checkBoxR4.Size = new Size(1433, 61);
+            checkBoxR4.Size = new Size(1254, 46);
             checkBoxR4.TabIndex = 5;
             checkBoxR4.Text = "checkBox4";
             checkBoxR4.UseVisualStyleBackColor = false;
@@ -245,10 +279,9 @@
             checkBoxR5.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR5.FlatStyle = FlatStyle.Flat;
             checkBoxR5.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR5.Location = new Point(3, 280);
-            checkBoxR5.Margin = new Padding(3, 4, 3, 4);
+            checkBoxR5.Location = new Point(3, 211);
             checkBoxR5.Name = "checkBoxR5";
-            checkBoxR5.Size = new Size(1433, 61);
+            checkBoxR5.Size = new Size(1254, 46);
             checkBoxR5.TabIndex = 6;
             checkBoxR5.Text = "checkBox5";
             checkBoxR5.UseVisualStyleBackColor = false;
@@ -263,10 +296,9 @@
             checkBoxR6.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR6.FlatStyle = FlatStyle.Flat;
             checkBoxR6.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR6.Location = new Point(3, 349);
-            checkBoxR6.Margin = new Padding(3, 4, 3, 4);
+            checkBoxR6.Location = new Point(3, 263);
             checkBoxR6.Name = "checkBoxR6";
-            checkBoxR6.Size = new Size(1433, 61);
+            checkBoxR6.Size = new Size(1254, 46);
             checkBoxR6.TabIndex = 7;
             checkBoxR6.Text = "checkBox6";
             checkBoxR6.UseVisualStyleBackColor = false;
@@ -281,10 +313,9 @@
             checkBoxR7.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR7.FlatStyle = FlatStyle.Flat;
             checkBoxR7.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR7.Location = new Point(3, 418);
-            checkBoxR7.Margin = new Padding(3, 4, 3, 4);
+            checkBoxR7.Location = new Point(3, 315);
             checkBoxR7.Name = "checkBoxR7";
-            checkBoxR7.Size = new Size(1433, 61);
+            checkBoxR7.Size = new Size(1254, 46);
             checkBoxR7.TabIndex = 8;
             checkBoxR7.Text = "checkBox7";
             checkBoxR7.UseVisualStyleBackColor = false;
@@ -299,10 +330,9 @@
             checkBoxR8.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR8.FlatStyle = FlatStyle.Flat;
             checkBoxR8.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR8.Location = new Point(3, 487);
-            checkBoxR8.Margin = new Padding(3, 4, 3, 4);
+            checkBoxR8.Location = new Point(3, 367);
             checkBoxR8.Name = "checkBoxR8";
-            checkBoxR8.Size = new Size(1433, 61);
+            checkBoxR8.Size = new Size(1254, 46);
             checkBoxR8.TabIndex = 9;
             checkBoxR8.Text = "checkBox8";
             checkBoxR8.UseVisualStyleBackColor = false;
@@ -312,9 +342,9 @@
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.White;
-            label2.Location = new Point(871, 692);
+            label2.Location = new Point(762, 518);
             label2.Name = "label2";
-            label2.Size = new Size(166, 28);
+            label2.Size = new Size(135, 21);
             label2.TabIndex = 41;
             label2.Text = "Condition Notes";
             label2.TextAlign = ContentAlignment.MiddleRight;
@@ -324,9 +354,9 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(7, 693);
+            label1.Location = new Point(6, 519);
             label1.Name = "label1";
-            label1.Size = new Size(144, 28);
+            label1.Size = new Size(115, 21);
             label1.TabIndex = 40;
             label1.Text = "Criteria Notes";
             label1.TextAlign = ContentAlignment.MiddleRight;
@@ -336,13 +366,12 @@
             tbANotes.BackColor = SystemColors.ButtonFace;
             tbANotes.BorderStyle = BorderStyle.FixedSingle;
             tbANotes.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            tbANotes.Location = new Point(871, 725);
-            tbANotes.Margin = new Padding(3, 4, 3, 4);
+            tbANotes.Location = new Point(762, 543);
             tbANotes.Multiline = true;
             tbANotes.Name = "tbANotes";
             tbANotes.ReadOnly = true;
             tbANotes.ScrollBars = ScrollBars.Vertical;
-            tbANotes.Size = new Size(576, 134);
+            tbANotes.Size = new Size(504, 101);
             tbANotes.TabIndex = 39;
             // 
             // tbCNotes
@@ -350,13 +379,12 @@
             tbCNotes.BackColor = SystemColors.ButtonFace;
             tbCNotes.BorderStyle = BorderStyle.FixedSingle;
             tbCNotes.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            tbCNotes.Location = new Point(7, 725);
-            tbCNotes.Margin = new Padding(3, 4, 3, 4);
+            tbCNotes.Location = new Point(6, 543);
             tbCNotes.Multiline = true;
             tbCNotes.Name = "tbCNotes";
             tbCNotes.ReadOnly = true;
             tbCNotes.ScrollBars = ScrollBars.Vertical;
-            tbCNotes.Size = new Size(843, 134);
+            tbCNotes.Size = new Size(738, 101);
             tbCNotes.TabIndex = 38;
             // 
             // lblCondition
@@ -364,9 +392,9 @@
             lblCondition.AutoSize = true;
             lblCondition.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblCondition.ForeColor = Color.White;
-            lblCondition.Location = new Point(13, 67);
+            lblCondition.Location = new Point(11, 44);
             lblCondition.Name = "lblCondition";
-            lblCondition.Size = new Size(109, 28);
+            lblCondition.Size = new Size(90, 21);
             lblCondition.TabIndex = 37;
             lblCondition.Text = "Condition:";
             lblCondition.TextAlign = ContentAlignment.MiddleRight;
@@ -376,9 +404,9 @@
             lblArea.AutoSize = true;
             lblArea.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblArea.ForeColor = Color.White;
-            lblArea.Location = new Point(58, 28);
+            lblArea.Location = new Point(51, 15);
             lblArea.Name = "lblArea";
-            lblArea.Size = new Size(61, 28);
+            lblArea.Size = new Size(49, 21);
             lblArea.TabIndex = 36;
             lblArea.Text = "Area:";
             // 
@@ -387,41 +415,40 @@
             lblPossibleRating.BorderStyle = BorderStyle.FixedSingle;
             lblPossibleRating.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblPossibleRating.ForeColor = Color.White;
-            lblPossibleRating.Location = new Point(7, 879);
+            lblPossibleRating.Location = new Point(255, 813);
             lblPossibleRating.Name = "lblPossibleRating";
-            lblPossibleRating.Size = new Size(380, 30);
+            lblPossibleRating.Size = new Size(333, 23);
             lblPossibleRating.TabIndex = 35;
             // 
             // listSummary
             // 
+            listSummary.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             listSummary.BackColor = SystemColors.ButtonFace;
             listSummary.BorderStyle = BorderStyle.FixedSingle;
             listSummary.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             listSummary.FormattingEnabled = true;
-            listSummary.ItemHeight = 21;
-            listSummary.Location = new Point(6, 918);
-            listSummary.Margin = new Padding(3, 4, 3, 4);
+            listSummary.ItemHeight = 17;
+            listSummary.Location = new Point(6, 839);
             listSummary.Name = "listSummary";
             listSummary.ScrollAlwaysVisible = true;
-            listSummary.Size = new Size(1440, 170);
+            listSummary.Size = new Size(1260, 121);
             listSummary.TabIndex = 34;
             // 
             // lblRating
             // 
             lblRating.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblRating.ForeColor = Color.White;
-            lblRating.Location = new Point(10, 96);
+            lblRating.Location = new Point(9, 72);
             lblRating.Name = "lblRating";
-            lblRating.Size = new Size(216, 28);
+            lblRating.Size = new Size(189, 21);
             lblRating.TabIndex = 33;
             // 
             // buttonReset
             // 
             buttonReset.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
-            buttonReset.Location = new Point(1362, 9);
-            buttonReset.Margin = new Padding(3, 4, 3, 4);
+            buttonReset.Location = new Point(1192, 7);
             buttonReset.Name = "buttonReset";
-            buttonReset.Size = new Size(81, 35);
+            buttonReset.Size = new Size(71, 26);
             buttonReset.TabIndex = 32;
             buttonReset.Text = "Reset";
             buttonReset.UseVisualStyleBackColor = true;
@@ -430,10 +457,10 @@
             // 
             buttonCopySummary.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             buttonCopySummary.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            buttonCopySummary.Location = new Point(1316, 876);
+            buttonCopySummary.Location = new Point(1152, 657);
             buttonCopySummary.Margin = new Padding(0);
             buttonCopySummary.Name = "buttonCopySummary";
-            buttonCopySummary.Size = new Size(127, 33);
+            buttonCopySummary.Size = new Size(111, 28);
             buttonCopySummary.TabIndex = 31;
             buttonCopySummary.Text = "Copy Summary";
             buttonCopySummary.UseVisualStyleBackColor = true;
@@ -441,10 +468,9 @@
             // buttonAddToSummary
             // 
             buttonAddToSummary.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
-            buttonAddToSummary.Location = new Point(1185, 9);
-            buttonAddToSummary.Margin = new Padding(3, 4, 3, 4);
+            buttonAddToSummary.Location = new Point(1037, 7);
             buttonAddToSummary.Name = "buttonAddToSummary";
-            buttonAddToSummary.Size = new Size(170, 35);
+            buttonAddToSummary.Size = new Size(149, 26);
             buttonAddToSummary.TabIndex = 30;
             buttonAddToSummary.Text = "Add To Summary";
             buttonAddToSummary.UseVisualStyleBackColor = true;
@@ -452,19 +478,17 @@
             // comboBoxName
             // 
             comboBoxName.FormattingEnabled = true;
-            comboBoxName.Location = new Point(118, 67);
-            comboBoxName.Margin = new Padding(3, 4, 3, 4);
+            comboBoxName.Location = new Point(103, 44);
             comboBoxName.Name = "comboBoxName";
-            comboBoxName.Size = new Size(1325, 29);
+            comboBoxName.Size = new Size(1160, 25);
             comboBoxName.TabIndex = 29;
             // 
             // comboBoxArea
             // 
             comboBoxArea.FormattingEnabled = true;
-            comboBoxArea.Location = new Point(118, 28);
-            comboBoxArea.Margin = new Padding(3, 4, 3, 4);
+            comboBoxArea.Location = new Point(103, 15);
             comboBoxArea.Name = "comboBoxArea";
-            comboBoxArea.Size = new Size(793, 29);
+            comboBoxArea.Size = new Size(694, 25);
             comboBoxArea.TabIndex = 28;
             // 
             // tabPage2
@@ -476,68 +500,73 @@
             tabPage2.Controls.Add(textBox1);
             tabPage2.Controls.Add(label6);
             tabPage2.ForeColor = Color.Black;
-            tabPage2.Location = new Point(4, 36);
-            tabPage2.Margin = new Padding(3, 4, 3, 4);
+            tabPage2.Location = new Point(4, 28);
             tabPage2.Name = "tabPage2";
-            tabPage2.Padding = new Padding(3, 4, 3, 4);
-            tabPage2.Size = new Size(1461, 1100);
+            tabPage2.Padding = new Padding(3);
+            tabPage2.Size = new Size(1277, 975);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "App Info/Help";
-            tabPage2.Click += tabPage2_Click;
             // 
             // textBox2
             // 
             textBox2.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox2.Location = new Point(139, 401);
-            textBox2.Margin = new Padding(3, 4, 3, 4);
+            textBox2.Location = new Point(122, 301);
             textBox2.Multiline = true;
             textBox2.Name = "textBox2";
             textBox2.ReadOnly = true;
-            textBox2.Size = new Size(1269, 189);
+            textBox2.Size = new Size(1111, 143);
             textBox2.TabIndex = 3;
             textBox2.Text = resources.GetString("textBox2.Text");
             // 
             // label7
             // 
             label7.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label7.Location = new Point(33, 331);
+            label7.Location = new Point(29, 248);
             label7.Name = "label7";
-            label7.Size = new Size(200, 43);
+            label7.Size = new Size(175, 32);
             label7.TabIndex = 2;
             label7.Text = "Notes:";
             // 
             // textBox1
             // 
             textBox1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox1.Location = new Point(139, 104);
-            textBox1.Margin = new Padding(3, 4, 3, 4);
+            textBox1.Location = new Point(122, 78);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
             textBox1.ReadOnly = true;
-            textBox1.Size = new Size(1269, 189);
+            textBox1.Size = new Size(1111, 143);
             textBox1.TabIndex = 1;
             textBox1.Text = resources.GetString("textBox1.Text");
             // 
             // label6
             // 
             label6.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label6.Location = new Point(33, 36);
+            label6.Location = new Point(29, 27);
             label6.Name = "label6";
-            label6.Size = new Size(200, 43);
+            label6.Size = new Size(175, 32);
             label6.TabIndex = 0;
             label6.Text = "Using the App:";
             // 
+            // panel1
+            // 
+            panel1.AutoScroll = true;
+            panel1.Controls.Add(tabControl1);
+            panel1.Controls.Add(label3);
+            panel1.Controls.Add(label4);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1309, 1081);
+            panel1.TabIndex = 29;
+            // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(15, 34, 58);
-            ClientSize = new Size(1495, 1239);
-            Controls.Add(tabControl1);
-            Controls.Add(label3);
+            ClientSize = new Size(1309, 1081);
             Controls.Add(label5);
-            Controls.Add(label4);
-            Margin = new Padding(3, 4, 3, 4);
+            Controls.Add(panel1);
             Name = "Form1";
             Text = "Qualifying App";
             Load += Form1_Load;
@@ -547,8 +576,9 @@
             flowLayoutPanel1.ResumeLayout(false);
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -585,5 +615,9 @@
         private TextBox textBox2;
         private Label label7;
         private TextBox textBox1;
+        private Label label8;
+        private Label label9;
+        private TextBox tb_curRatings;
+        private Panel panel1;
     }
 }

@@ -96,3 +96,26 @@ jobs:
           asset_path: installer-build\ConditionCriteriaInstaller.exe
           asset_name: ConditionCriteriaInstaller.exe
           asset_content_type: application/octet-stream
+      
+      # 11. Create update.json file
+      - name: Create update manifest
+        shell: pwsh
+        run: |
+          $version = '${{ steps.get_version.outputs.version }}'
+          $installerName = 'ConditionCriteriaInstaller.exe'
+          $url = "https://github.com/${{ github.repository }}/releases/download/v$version/$installerName"
+          $notes = "Release $version"
+          $obj = @{ version = $version; url = $url; notes = $notes }
+          $json = $obj | ConvertTo-Json -Compress
+          Set-Content -Path update.json -Value $json -Encoding UTF8
+
+      # 12. Upload update.json Artifact
+      - name: Upload update manifest
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: update.json
+          asset_name: update.json
+          asset_content_type: application/json
