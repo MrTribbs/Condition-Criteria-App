@@ -2,41 +2,12 @@ namespace Condition_Criteria_App
 {
     using System.Net.Http;
     using System.Text.Json;
+    using System.Threading.Tasks;
+    using System.Windows.Forms;
+
 
     public partial class Form1 : Form
     {
-        public async Task CheckForUpdateAsync()
-        {
-            string manifestUrl = "https://github.com/MrTribbs/Condition-Criteria-App/releases/latest/download/update.json";
-            using HttpClient client = new HttpClient();
-            string json = await client.GetStringAsync(manifestUrl);
-            var updateInfo = JsonSerializer.Deserialize<UpdateManifest>(json);
-
-            if (updateInfo != null && updateInfo.Version != Application.ProductVersion)
-            {
-                DialogResult result = MessageBox.Show(
-                    $"New version {updateInfo.Version} available.\nDo you want to download it?",
-                    "Update Available",
-                    MessageBoxButtons.YesNo);
-
-                if (result == DialogResult.Yes)
-                {
-                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                    {
-                        FileName = updateInfo.Url,
-                        UseShellExecute = true
-                    });
-                }
-            }
-        }
-
-        public class UpdateManifest
-        {
-            public required string Version { get; set; }
-            public required string Url { get; set; }
-            public string? Notes { get; set; }
-        }
-
         // Data lists
         private List<AreaEntry> aEntries;
         private List<CEntry> criteriaEntries;
@@ -86,6 +57,38 @@ namespace Condition_Criteria_App
         private void Form1_Load(object? sender, EventArgs e)
         {
             PopulateAreaDropdown();
+        }
+
+        public async Task CheckForUpdateAsync()
+        {
+            string manifestUrl = "https://github.com/MrTribbs/Condition-Criteria-App/releases/latest/download/update.json";
+            using HttpClient client = new();
+            string json = await client.GetStringAsync(manifestUrl);
+            var updateInfo = JsonSerializer.Deserialize<UpdateManifest>(json);
+
+            if (updateInfo != null && updateInfo.Version != Application.ProductVersion)
+            {
+                DialogResult result = MessageBox.Show(
+                    $"New version {updateInfo.Version} available.\nDo you want to download it?",
+                    "Update Available",
+                    MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = updateInfo.Url,
+                        UseShellExecute = true
+                    });
+                }
+            }
+        }
+
+        public class UpdateManifest
+        {
+            public required string Version { get; set; }
+            public required string Url { get; set; }
+            public string? Notes { get; set; }
         }
 
         private void PopulateAreaDropdown()

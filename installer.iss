@@ -1,6 +1,6 @@
 [Setup]
 AppName=Condition Criteria App
-AppVersion=2.1.3
+AppVersion=2.1.4
 DefaultDirName={pf}\Condition Criteria App
 OutputBaseFilename=ConditionCriteriaInstaller
 Compression=lzma
