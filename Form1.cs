@@ -111,39 +111,44 @@ namespace Condition_Criteria_App
             PopulateAreaDropdown();
         }
 
-        private async Task CheckForUpdateAsync()
+        private async void btnCheckUpdate_Click(object sender, EventArgs e)
         {
-            string manifestUrl = "https://github.com/MrTribbs/Condition-Criteria-App/releases/latest/download/update.json";
             try
             {
-                string json = await s_httpClient.GetStringAsync(manifestUrl);
-                var updateInfo = JsonSerializer.Deserialize<UpdateManifest>(json);
-
-                if (updateInfo != null && updateInfo.Version != Application.ProductVersion)
-                {
-                    DialogResult result = MessageBox.Show(
-                        $"New version {updateInfo.Version} available.\nDo you want to download it?",
-                        "Update Available",
-                        MessageBoxButtons.YesNo);
-
-                    if (result == DialogResult.Yes)
-                    {
-                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                        {
-                            FileName = updateInfo.Url,
-                            UseShellExecute = true
-                        });
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("You are running the latest version.", "No Update Available");
-                }
+                await CheckForUpdateAsync();
             }
             catch (Exception ex)
             {
-                // Show friendly error on network/parse failure
-                MessageBox.Show($"Failed to check for updates: {ex.Message}", "Update Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Failed to check for updates: {ex.Message}", "Error");
+            }
+        }
+
+        private async Task CheckForUpdateAsync()
+        {
+            string manifestUrl = "https://github.com/MrTribbs/Condition-Criteria-App/releases/latest/download/update.json";
+            using HttpClient client = new HttpClient();
+            string json = await client.GetStringAsync(manifestUrl);
+            var updateInfo = JsonSerializer.Deserialize<UpdateManifest>(json);
+
+            if (updateInfo != null && updateInfo.Version.Trim() != Application.ProductVersion)
+            {
+                DialogResult result = MessageBox.Show(
+                    $"New version {updateInfo.Version} available.\nDo you want to download it?",
+                    "Update Available",
+                    MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes && !string.IsNullOrWhiteSpace(updateInfo.Url))
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = updateInfo.Url,
+                        UseShellExecute = true
+                    });
+                }
+            }
+            else
+            {
+                MessageBox.Show("You are running the latest version.", "No Update Available");
             }
         }
 
@@ -152,12 +157,6 @@ namespace Condition_Criteria_App
             public string Version { get; set; }
             public string Url { get; set; }
             public string Notes { get; set; }
-        }
-
-
-        private async void btnCheckUpdate_Click(object sender, EventArgs e)
-        {
-            await CheckForUpdateAsync();
         }
 
         private void PopulateAreaDropdown()
