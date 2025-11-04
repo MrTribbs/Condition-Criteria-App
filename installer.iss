@@ -1,15 +1,17 @@
 [Setup]
 AppName=Condition Criteria App
-AppVersion=2.1.1
+AppVersion=2.1.2
 DefaultDirName={pf}\Condition Criteria App
 OutputBaseFilename=ConditionCriteriaInstaller
 Compression=lzma
 SolidCompression=yes
 DisableDirPage=yes
 DisableProgramGroupPage=yes
+SetupIconFile=installer-build\app.ico
 
 [Files]
 Source: "installer-build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "installer-build\app.ico"; DestDir: "{app}"
 
 [Icons]
 Name: "{group}\Condition Criteria App"; Filename: "{app}\Condition Criteria App.exe"

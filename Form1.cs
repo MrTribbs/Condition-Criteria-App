@@ -32,9 +32,9 @@ namespace Condition_Criteria_App
 
         public class UpdateManifest
         {
-            public string Version { get; set; }
-            public string Url { get; set; }
-            public string Notes { get; set; }
+            public required string Version { get; set; }
+            public required string Url { get; set; }
+            public string? Notes { get; set; }
         }
 
         // Data lists
@@ -46,7 +46,7 @@ namespace Condition_Criteria_App
 
         // Helper to iterate the 8 criteria checkboxes
         private IEnumerable<CheckBox> CriteriaBoxes =>
-            new[] { checkBoxR1, checkBoxR2, checkBoxR3, checkBoxR4, checkBoxR5, checkBoxR6, checkBoxR7, checkBoxR8 };
+            [checkBoxR1, checkBoxR2, checkBoxR3, checkBoxR4, checkBoxR5, checkBoxR6, checkBoxR7, checkBoxR8];
 
         public Form1()
         {
