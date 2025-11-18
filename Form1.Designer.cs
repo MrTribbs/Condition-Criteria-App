@@ -96,7 +96,7 @@
             label4.Name = "label4";
             label4.Size = new Size(72, 15);
             label4.TabIndex = 23;
-            label4.Text = "Version 2.1.7";
+            label4.Text = "Version 2.1.8";
             label4.TextAlign = ContentAlignment.MiddleRight;
             // 
             // label5
@@ -155,12 +155,12 @@
             // tb_curRatings
             // 
             tb_curRatings.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            tb_curRatings.Location = new Point(6, 686);
+            tb_curRatings.Location = new Point(6, 699);
             tb_curRatings.Multiline = true;
             tb_curRatings.Name = "tb_curRatings";
             tb_curRatings.PlaceholderText = "Enter client's current rated disabilities and current percentages.";
             tb_curRatings.ScrollBars = ScrollBars.Vertical;
-            tb_curRatings.Size = new Size(1260, 119);
+            tb_curRatings.Size = new Size(1260, 106);
             tb_curRatings.TabIndex = 46;
             // 
             // label9
@@ -180,7 +180,7 @@
             label8.AutoSize = true;
             label8.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label8.ForeColor = Color.White;
-            label8.Location = new Point(7, 662);
+            label8.Location = new Point(6, 675);
             label8.Name = "label8";
             label8.Size = new Size(192, 21);
             label8.TabIndex = 44;
@@ -189,6 +189,7 @@
             // 
             // flowLayoutPanel1
             // 
+            flowLayoutPanel1.AutoSize = true;
             flowLayoutPanel1.Controls.Add(checkBoxR1);
             flowLayoutPanel1.Controls.Add(checkBoxR2);
             flowLayoutPanel1.Controls.Add(checkBoxR3);
@@ -197,24 +198,29 @@
             flowLayoutPanel1.Controls.Add(checkBoxR6);
             flowLayoutPanel1.Controls.Add(checkBoxR7);
             flowLayoutPanel1.Controls.Add(checkBoxR8);
-            flowLayoutPanel1.Location = new Point(6, 96);
+            flowLayoutPanel1.Location = new Point(7, 68);
+            flowLayoutPanel1.MaximumSize = new Size(1260, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(1260, 414);
+            flowLayoutPanel1.Size = new Size(1260, 453);
             flowLayoutPanel1.TabIndex = 42;
             // 
             // checkBoxR1
             // 
             checkBoxR1.Appearance = Appearance.Button;
+            checkBoxR1.AutoSize = true;
             checkBoxR1.BackColor = SystemColors.ControlLight;
+            checkBoxR1.CheckAlign = ContentAlignment.TopLeft;
             checkBoxR1.FlatAppearance.BorderColor = Color.Black;
             checkBoxR1.FlatAppearance.CheckedBackColor = Color.FromArgb(197, 223, 196);
             checkBoxR1.FlatAppearance.MouseDownBackColor = Color.FromArgb(226, 242, 231);
             checkBoxR1.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR1.FlatStyle = FlatStyle.Flat;
-            checkBoxR1.Font = new Font("Segoe UI", 9.75F);
+            checkBoxR1.Font = new Font("Segoe UI", 8.75F);
             checkBoxR1.Location = new Point(3, 3);
+            checkBoxR1.MaximumSize = new Size(1254, 0);
+            checkBoxR1.MinimumSize = new Size(1254, 50);
             checkBoxR1.Name = "checkBoxR1";
-            checkBoxR1.Size = new Size(1254, 46);
+            checkBoxR1.Size = new Size(1254, 50);
             checkBoxR1.TabIndex = 2;
             checkBoxR1.Text = "checkBox1";
             checkBoxR1.UseVisualStyleBackColor = false;
@@ -222,16 +228,20 @@
             // checkBoxR2
             // 
             checkBoxR2.Appearance = Appearance.Button;
+            checkBoxR2.AutoSize = true;
             checkBoxR2.BackColor = SystemColors.ControlLight;
+            checkBoxR2.CheckAlign = ContentAlignment.TopLeft;
             checkBoxR2.FlatAppearance.BorderColor = Color.Black;
             checkBoxR2.FlatAppearance.CheckedBackColor = Color.FromArgb(197, 223, 196);
             checkBoxR2.FlatAppearance.MouseDownBackColor = Color.FromArgb(226, 242, 231);
             checkBoxR2.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR2.FlatStyle = FlatStyle.Flat;
-            checkBoxR2.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR2.Location = new Point(3, 55);
+            checkBoxR2.Font = new Font("Segoe UI", 8.75F);
+            checkBoxR2.Location = new Point(3, 59);
+            checkBoxR2.MaximumSize = new Size(1254, 0);
+            checkBoxR2.MinimumSize = new Size(1254, 50);
             checkBoxR2.Name = "checkBoxR2";
-            checkBoxR2.Size = new Size(1254, 46);
+            checkBoxR2.Size = new Size(1254, 50);
             checkBoxR2.TabIndex = 3;
             checkBoxR2.Text = "checkBox2";
             checkBoxR2.UseVisualStyleBackColor = false;
@@ -239,16 +249,20 @@
             // checkBoxR3
             // 
             checkBoxR3.Appearance = Appearance.Button;
+            checkBoxR3.AutoSize = true;
             checkBoxR3.BackColor = SystemColors.ControlLight;
+            checkBoxR3.CheckAlign = ContentAlignment.TopLeft;
             checkBoxR3.FlatAppearance.BorderColor = Color.Black;
             checkBoxR3.FlatAppearance.CheckedBackColor = Color.FromArgb(197, 223, 196);
             checkBoxR3.FlatAppearance.MouseDownBackColor = Color.FromArgb(226, 242, 231);
             checkBoxR3.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR3.FlatStyle = FlatStyle.Flat;
-            checkBoxR3.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR3.Location = new Point(3, 107);
+            checkBoxR3.Font = new Font("Segoe UI", 8.75F);
+            checkBoxR3.Location = new Point(3, 115);
+            checkBoxR3.MaximumSize = new Size(1254, 0);
+            checkBoxR3.MinimumSize = new Size(1254, 50);
             checkBoxR3.Name = "checkBoxR3";
-            checkBoxR3.Size = new Size(1254, 46);
+            checkBoxR3.Size = new Size(1254, 50);
             checkBoxR3.TabIndex = 4;
             checkBoxR3.Text = "checkBox3";
             checkBoxR3.UseVisualStyleBackColor = false;
@@ -256,16 +270,20 @@
             // checkBoxR4
             // 
             checkBoxR4.Appearance = Appearance.Button;
+            checkBoxR4.AutoSize = true;
             checkBoxR4.BackColor = SystemColors.ControlLight;
+            checkBoxR4.CheckAlign = ContentAlignment.TopLeft;
             checkBoxR4.FlatAppearance.BorderColor = Color.Black;
             checkBoxR4.FlatAppearance.CheckedBackColor = Color.FromArgb(197, 223, 196);
             checkBoxR4.FlatAppearance.MouseDownBackColor = Color.FromArgb(226, 242, 231);
             checkBoxR4.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR4.FlatStyle = FlatStyle.Flat;
-            checkBoxR4.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR4.Location = new Point(3, 159);
+            checkBoxR4.Font = new Font("Segoe UI", 8.75F);
+            checkBoxR4.Location = new Point(3, 171);
+            checkBoxR4.MaximumSize = new Size(1254, 0);
+            checkBoxR4.MinimumSize = new Size(1254, 50);
             checkBoxR4.Name = "checkBoxR4";
-            checkBoxR4.Size = new Size(1254, 46);
+            checkBoxR4.Size = new Size(1254, 50);
             checkBoxR4.TabIndex = 5;
             checkBoxR4.Text = "checkBox4";
             checkBoxR4.UseVisualStyleBackColor = false;
@@ -273,16 +291,20 @@
             // checkBoxR5
             // 
             checkBoxR5.Appearance = Appearance.Button;
+            checkBoxR5.AutoSize = true;
             checkBoxR5.BackColor = SystemColors.ControlLight;
+            checkBoxR5.CheckAlign = ContentAlignment.TopLeft;
             checkBoxR5.FlatAppearance.BorderColor = Color.Black;
             checkBoxR5.FlatAppearance.CheckedBackColor = Color.FromArgb(197, 223, 196);
             checkBoxR5.FlatAppearance.MouseDownBackColor = Color.FromArgb(226, 242, 231);
             checkBoxR5.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR5.FlatStyle = FlatStyle.Flat;
-            checkBoxR5.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR5.Location = new Point(3, 211);
+            checkBoxR5.Font = new Font("Segoe UI", 8.75F);
+            checkBoxR5.Location = new Point(3, 227);
+            checkBoxR5.MaximumSize = new Size(1254, 0);
+            checkBoxR5.MinimumSize = new Size(1254, 50);
             checkBoxR5.Name = "checkBoxR5";
-            checkBoxR5.Size = new Size(1254, 46);
+            checkBoxR5.Size = new Size(1254, 50);
             checkBoxR5.TabIndex = 6;
             checkBoxR5.Text = "checkBox5";
             checkBoxR5.UseVisualStyleBackColor = false;
@@ -290,16 +312,20 @@
             // checkBoxR6
             // 
             checkBoxR6.Appearance = Appearance.Button;
+            checkBoxR6.AutoSize = true;
             checkBoxR6.BackColor = SystemColors.ControlLight;
+            checkBoxR6.CheckAlign = ContentAlignment.TopLeft;
             checkBoxR6.FlatAppearance.BorderColor = Color.Black;
             checkBoxR6.FlatAppearance.CheckedBackColor = Color.FromArgb(197, 223, 196);
             checkBoxR6.FlatAppearance.MouseDownBackColor = Color.FromArgb(226, 242, 231);
             checkBoxR6.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR6.FlatStyle = FlatStyle.Flat;
-            checkBoxR6.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR6.Location = new Point(3, 263);
+            checkBoxR6.Font = new Font("Segoe UI", 8.75F);
+            checkBoxR6.Location = new Point(3, 283);
+            checkBoxR6.MaximumSize = new Size(1254, 0);
+            checkBoxR6.MinimumSize = new Size(1254, 50);
             checkBoxR6.Name = "checkBoxR6";
-            checkBoxR6.Size = new Size(1254, 46);
+            checkBoxR6.Size = new Size(1254, 50);
             checkBoxR6.TabIndex = 7;
             checkBoxR6.Text = "checkBox6";
             checkBoxR6.UseVisualStyleBackColor = false;
@@ -307,16 +333,20 @@
             // checkBoxR7
             // 
             checkBoxR7.Appearance = Appearance.Button;
+            checkBoxR7.AutoSize = true;
             checkBoxR7.BackColor = SystemColors.ControlLight;
+            checkBoxR7.CheckAlign = ContentAlignment.TopLeft;
             checkBoxR7.FlatAppearance.BorderColor = Color.Black;
             checkBoxR7.FlatAppearance.CheckedBackColor = Color.FromArgb(197, 223, 196);
             checkBoxR7.FlatAppearance.MouseDownBackColor = Color.FromArgb(226, 242, 231);
             checkBoxR7.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR7.FlatStyle = FlatStyle.Flat;
-            checkBoxR7.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR7.Location = new Point(3, 315);
+            checkBoxR7.Font = new Font("Segoe UI", 8.75F);
+            checkBoxR7.Location = new Point(3, 339);
+            checkBoxR7.MaximumSize = new Size(1254, 0);
+            checkBoxR7.MinimumSize = new Size(1254, 50);
             checkBoxR7.Name = "checkBoxR7";
-            checkBoxR7.Size = new Size(1254, 46);
+            checkBoxR7.Size = new Size(1254, 50);
             checkBoxR7.TabIndex = 8;
             checkBoxR7.Text = "checkBox7";
             checkBoxR7.UseVisualStyleBackColor = false;
@@ -324,16 +354,20 @@
             // checkBoxR8
             // 
             checkBoxR8.Appearance = Appearance.Button;
+            checkBoxR8.AutoSize = true;
             checkBoxR8.BackColor = SystemColors.ControlLight;
+            checkBoxR8.CheckAlign = ContentAlignment.TopLeft;
             checkBoxR8.FlatAppearance.BorderColor = Color.Black;
             checkBoxR8.FlatAppearance.CheckedBackColor = Color.FromArgb(197, 223, 196);
             checkBoxR8.FlatAppearance.MouseDownBackColor = Color.FromArgb(226, 242, 231);
             checkBoxR8.FlatAppearance.MouseOverBackColor = Color.FromArgb(247, 212, 166);
             checkBoxR8.FlatStyle = FlatStyle.Flat;
-            checkBoxR8.Font = new Font("Segoe UI", 9.75F);
-            checkBoxR8.Location = new Point(3, 367);
+            checkBoxR8.Font = new Font("Segoe UI", 8.75F);
+            checkBoxR8.Location = new Point(3, 395);
+            checkBoxR8.MaximumSize = new Size(1254, 0);
+            checkBoxR8.MinimumSize = new Size(1254, 50);
             checkBoxR8.Name = "checkBoxR8";
-            checkBoxR8.Size = new Size(1254, 46);
+            checkBoxR8.Size = new Size(1254, 50);
             checkBoxR8.TabIndex = 9;
             checkBoxR8.Text = "checkBox8";
             checkBoxR8.UseVisualStyleBackColor = false;
@@ -343,7 +377,7 @@
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.White;
-            label2.Location = new Point(762, 518);
+            label2.Location = new Point(762, 529);
             label2.Name = "label2";
             label2.Size = new Size(135, 21);
             label2.TabIndex = 41;
@@ -355,7 +389,7 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(6, 519);
+            label1.Location = new Point(6, 530);
             label1.Name = "label1";
             label1.Size = new Size(115, 21);
             label1.TabIndex = 40;
@@ -367,7 +401,7 @@
             tbANotes.BackColor = SystemColors.ButtonFace;
             tbANotes.BorderStyle = BorderStyle.FixedSingle;
             tbANotes.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            tbANotes.Location = new Point(762, 543);
+            tbANotes.Location = new Point(762, 554);
             tbANotes.Multiline = true;
             tbANotes.Name = "tbANotes";
             tbANotes.ReadOnly = true;
@@ -380,7 +414,7 @@
             tbCNotes.BackColor = SystemColors.ButtonFace;
             tbCNotes.BorderStyle = BorderStyle.FixedSingle;
             tbCNotes.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            tbCNotes.Location = new Point(6, 543);
+            tbCNotes.Location = new Point(6, 554);
             tbCNotes.Multiline = true;
             tbCNotes.Name = "tbCNotes";
             tbCNotes.ReadOnly = true;
@@ -393,7 +427,7 @@
             lblCondition.AutoSize = true;
             lblCondition.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblCondition.ForeColor = Color.White;
-            lblCondition.Location = new Point(11, 44);
+            lblCondition.Location = new Point(11, 36);
             lblCondition.Name = "lblCondition";
             lblCondition.Size = new Size(90, 21);
             lblCondition.TabIndex = 37;
@@ -405,7 +439,7 @@
             lblArea.AutoSize = true;
             lblArea.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblArea.ForeColor = Color.White;
-            lblArea.Location = new Point(51, 15);
+            lblArea.Location = new Point(51, 7);
             lblArea.Name = "lblArea";
             lblArea.Size = new Size(49, 21);
             lblArea.TabIndex = 36;
@@ -439,10 +473,11 @@
             // 
             lblRating.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblRating.ForeColor = Color.White;
-            lblRating.Location = new Point(9, 72);
+            lblRating.Location = new Point(832, 9);
             lblRating.Name = "lblRating";
             lblRating.Size = new Size(189, 21);
             lblRating.TabIndex = 33;
+            lblRating.TextAlign = ContentAlignment.MiddleRight;
             // 
             // buttonReset
             // 
@@ -458,7 +493,7 @@
             // 
             buttonCopySummary.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             buttonCopySummary.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            buttonCopySummary.Location = new Point(1152, 657);
+            buttonCopySummary.Location = new Point(1152, 668);
             buttonCopySummary.Margin = new Padding(0);
             buttonCopySummary.Name = "buttonCopySummary";
             buttonCopySummary.Size = new Size(111, 28);
@@ -479,7 +514,7 @@
             // comboBoxName
             // 
             comboBoxName.FormattingEnabled = true;
-            comboBoxName.Location = new Point(103, 44);
+            comboBoxName.Location = new Point(103, 36);
             comboBoxName.Name = "comboBoxName";
             comboBoxName.Size = new Size(1160, 25);
             comboBoxName.TabIndex = 29;
@@ -487,7 +522,7 @@
             // comboBoxArea
             // 
             comboBoxArea.FormattingEnabled = true;
-            comboBoxArea.Location = new Point(103, 15);
+            comboBoxArea.Location = new Point(103, 7);
             comboBoxArea.Name = "comboBoxArea";
             comboBoxArea.Size = new Size(694, 25);
             comboBoxArea.TabIndex = 28;
@@ -586,6 +621,7 @@
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
             panel1.ResumeLayout(false);

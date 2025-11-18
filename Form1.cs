@@ -379,7 +379,7 @@ namespace Condition_Criteria_App
             });
 
             // Add to ListBox
-            listSummary.Items.Add($"{areaEntry.Area} > {areaEntry.Name} > DC: {areaEntry.DC} > Rating: {ratingText}");
+            listSummary.Items.Add($"{areaEntry.Area} > {areaEntry.Name} > Rating: {ratingText}");
 
             // Ensure summary controls are visible once we have entries
             EnsureSummaryVisible(summaryEntries.Count > 0);
@@ -429,7 +429,7 @@ namespace Condition_Criteria_App
             sb.AppendLine(lblPossibleRating.Text);
             foreach (var entry in summaryEntries)
             {
-                sb.AppendLine($"{entry.Area} > {entry.Name} > DC: {entry.DC} > Rating: {entry.Rating}");
+                sb.AppendLine($"{entry.Area} > {entry.Name} > Rating: {entry.Rating}");
             }
 
             try
