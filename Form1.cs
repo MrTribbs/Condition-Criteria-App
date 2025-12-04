@@ -9,7 +9,7 @@ namespace Condition_Criteria_App
     using Newtonsoft.Json;
     using System.Threading.Tasks;
     using System.Windows.Forms;
-
+    
 
     public partial class Form1 : Form
     {
@@ -36,6 +36,10 @@ namespace Condition_Criteria_App
         // Shared HttpClient to avoid socket exhaustion / allocations
         private static readonly HttpClient s_httpClient = new HttpClient();
 
+        private bool _suppressAreaComboEvents;
+        private bool _suppressNameComboEvents;
+        private string[] _currentNames = Array.Empty<string>();
+
         public Form1()
         {
             InitializeComponent();
@@ -53,6 +57,16 @@ namespace Condition_Criteria_App
 
             // Build fast lookup caches
             BuildCaches();
+
+            comboBoxArea.DropDownStyle = ComboBoxStyle.DropDown;
+
+            comboBoxArea.TextUpdate += comboBoxArea_TextUpdate;
+            comboBoxArea.DropDown += comboBoxArea_DropDown;
+
+            comboBoxName.DropDownStyle = ComboBoxStyle.DropDown;
+
+            comboBoxName.TextUpdate += comboBoxName_TextUpdate;
+            comboBoxName.DropDown += comboBoxName_DropDown;
 
             // Wire up events
             comboBoxArea.SelectedIndexChanged += comboBoxArea_SelectedIndexChanged;
@@ -106,9 +120,120 @@ namespace Condition_Criteria_App
                 .ToDictionary(a => a.DC, a => a);
         }
 
+        private void comboBoxArea_TextUpdate(object? sender, EventArgs e)
+        {
+            ApplyAreaFilter(comboBoxArea.Text, openDropDown: true);
+        }
+
+        private void comboBoxArea_DropDown(object? sender, EventArgs e)
+        {
+            ApplyAreaFilter(comboBoxArea.Text, openDropDown: false);
+        }
+
+        private void comboBoxName_TextUpdate(object? sender, EventArgs e)
+        {
+            ApplyNameFilter(comboBoxName.Text, openDropDown: true);
+        }
+
+        private void comboBoxName_DropDown(object? sender, EventArgs e)
+        {
+            ApplyNameFilter(comboBoxName.Text, openDropDown: false);
+        }
+
+        private void ApplyAreaFilter(string? text, bool openDropDown)
+        {
+            var filter = text ?? string.Empty;
+
+            var items = string.IsNullOrWhiteSpace(filter)
+                ? _distinctAreas
+                : _distinctAreas
+                    .Where(a => a.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                    .ToArray();
+
+            var selStart = comboBoxArea.SelectionStart;
+            var selLength = comboBoxArea.SelectionLength;
+
+            _suppressAreaComboEvents = true;
+            comboBoxArea.BeginUpdate();
+
+            try
+            {
+                comboBoxArea.Items.Clear();
+                comboBoxArea.Items.AddRange(items);
+                comboBoxArea.SelectedIndex = -1;
+
+                comboBoxArea.Text = filter;
+                comboBoxArea.SelectionStart = Math.Min(selStart, comboBoxArea.Text.Length);
+                comboBoxArea.SelectionLength = selLength;
+
+                if (openDropDown)
+                    comboBoxArea.DroppedDown = items.Length > 0;
+            }
+            finally
+            {
+                comboBoxArea.EndUpdate();
+                _suppressAreaComboEvents = false;
+            }
+        }
+
+        private void RestoreAreaDropdown(string selectedArea)
+        {
+            _suppressAreaComboEvents = true;
+            comboBoxArea.BeginUpdate();
+            try
+            {
+                comboBoxArea.Items.Clear();
+                comboBoxArea.Items.AddRange(_distinctAreas);
+                comboBoxArea.SelectedItem = selectedArea;
+                comboBoxArea.Text = selectedArea;
+            }
+            finally
+            {
+                comboBoxArea.EndUpdate();
+                _suppressAreaComboEvents = false;
+            }
+        }
+
+        private void ApplyNameFilter(string? text, bool openDropDown)
+        {
+            var filter = text ?? string.Empty;
+
+            var items = string.IsNullOrWhiteSpace(filter)
+                ? _currentNames
+                : _currentNames
+                    .Where( n => n != null && n.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                    .ToArray();
+
+            var selStart = comboBoxName.SelectionStart;
+            var selLength = comboBoxName.SelectionLength;
+
+            _suppressNameComboEvents = true;
+            comboBoxName.BeginUpdate();
+            try
+            {
+                comboBoxName.Items.Clear();
+                comboBoxName.Items.AddRange(items);
+                comboBoxName.SelectedIndex = -1;
+
+                comboBoxName.Text = filter;
+                comboBoxName.SelectionStart = Math.Min(selStart, comboBoxName.Text.Length);
+                comboBoxName.SelectionLength = selLength;
+
+                if (openDropDown)
+                    comboBoxName.DroppedDown = items.Length >0;
+            }
+            finally
+            {
+                comboBoxName.EndUpdate();
+                _suppressNameComboEvents = false;
+            }
+        }
+
         private void Form1_Load(object? sender, EventArgs e)
         {
+            var selectedArea = comboBoxArea.Text;
             PopulateAreaDropdown();
+            RestoreAreaDropdown(selectedArea);
         }
 
         private async void btnCheckUpdate_Click(object sender, EventArgs e)
@@ -199,6 +324,8 @@ namespace Condition_Criteria_App
 
         private void comboBoxArea_SelectedIndexChanged(object? sender, EventArgs e)
         {
+            if (_suppressAreaComboEvents) return;
+
             string? selectedArea = comboBoxArea.SelectedItem?.ToString();
 
             // Clear items and any selected/displayed value so the UI updates immediately
@@ -212,7 +339,12 @@ namespace Condition_Criteria_App
 
                 if (!string.IsNullOrEmpty(selectedArea) && _areaToNames.TryGetValue(selectedArea, out var names) && names.Count > 0)
                 {
-                    comboBoxName.Items.AddRange(names.ToArray());
+                    _currentNames = names.ToArray();
+                    comboBoxName.Items.AddRange(_currentNames);
+                }
+                else
+                {
+                    _currentNames = Array.Empty<string>();
                 }
             }
             finally
@@ -226,6 +358,8 @@ namespace Condition_Criteria_App
 
         private void comboBoxName_SelectedIndexChanged(object? sender, EventArgs e)
         {
+            if (_suppressNameComboEvents) return;
+
             string? selectedArea = comboBoxArea.SelectedItem?.ToString();
             string? selectedName = comboBoxName.SelectedItem?.ToString();
 
